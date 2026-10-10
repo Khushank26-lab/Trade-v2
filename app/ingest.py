@@ -35,7 +35,7 @@ def _download(batch, start):
             print(f"[ingest] batch failed (attempt {attempt}): {e}"); time.sleep(5)
     return None
 
-def run(years=6, batch_size=100, pause=1.0, limit=None):
+def run(years=1, batch_size=100, pause=1.0, limit=None):
     db.init()
     uni = universe.build_universe()
     tickers = list(dict.fromkeys(list(uni["ticker"])[: limit or None] + EXTRA_INDICES))
