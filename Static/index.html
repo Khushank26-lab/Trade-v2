@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weekly Bullish Scanner - NSE + BSE</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">Weekly Bullish Scanner <span class="tag">Scorecard v6</span></div>
+  <div id="ticker" class="ticker"></div>
+</header>
+<main>
+  <section class="notice">
+    <b>Read first:</b> no stock has a 99% chance of hitting a profit target. This site shows how often each setup <i>actually</i> reached your target in the past,
+    with sample sizes. Past frequency is not a promise. Educational screening tool, not investment advice.
+  </section>
+
+  <form id="f" class="panel">
+    <div class="grid">
+      <label>Profit target (%)<input id="target" type="number" step="0.5" min="0.5" max="30" value="4" required></label>
+      <label>Time frame
+        <span class="row"><input id="tf" type="number" min="1" max="20" value="1" required>
+        <select id="unit"><option value="weeks" selected>weeks</option><option value="days">days</option></select></span>
+      </label>
+      <label>Stop-loss (%)<input id="stop" type="number" step="0.5" min="0.5" max="10" value="2" required></label>
+      <label>Strictness
+        <select id="mode"><option value="strict">Strict (11/12)</option><option value="standard">Standard (10/12)</option><option value="relaxed">Relaxed (9/12)</option></select>
+      </label>
+      <label>Min historical hit rate (%)<input id="min_hit" type="number" min="0" max="100" value="0" placeholder="0 = show best"></label>
+      <label>Exchange<select id="exchange"><option value="both">NSE + BSE</option><option>NSE</option><option>BSE</option></select></label>
+      <label>Capital (Rs)<input id="capital" type="number" min="1000" value="500000"></label>
+      <label>Risk per trade (%)<input id="risk" type="number" step="0.1" min="0.1" max="5" value="1"></label>
+    </div>
+    <label class="chk"><input id="require_fund" type="checkbox" checked> Only strong fundamentals &amp; no red-flag news (checked for the shortlist)</label>
+    <button id="go" type="submit">Find best bullish stocks</button>
+  </form>
+
+  <section id="status" class="muted"></section>
+  <section id="funnel"></section>
+  <section id="banner"></section>
+  <section id="results"></section>
+  <footer>Live prices: Yahoo Finance, about 15 minutes delayed unless you connect a broker feed. Fundamentals/news are best-effort and may be missing. Verify everything before trading.</footer>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
