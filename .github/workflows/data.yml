@@ -11,7 +11,7 @@ permissions:
 jobs:
   download-data:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 120
 
     steps:
       - name: 📥 Get repository code
@@ -37,8 +37,23 @@ jobs:
 
       - name: 💾 Save Data back to GitHub
         run: |
+          echo "=== DATA STORAGE REPORT ==="
+          echo "Location: Data/ directory"
+          
+          # 'ls -lh' lists exactly what files are inside and their individual sizes (MB/GB)
+          ls -lh Data/ || echo "Data directory does not exist!"
+          
+          echo "---"
+          echo "Total Data Folder Size:"
+          # 'du -sh' calculates the total combined size of everything in the folder
+          du -sh Data/ || echo "0 MB"
+          echo "==========================="
+          
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
+          
+          # The -f (force) flag ensures git tracks the database even if a .gitignore rule tries to block it
+          git add -f Data/
+          
           git diff-index --quiet HEAD || git commit -m "Auto-updated market data [skip ci]"
           git push
