@@ -4,6 +4,7 @@ import argparse, datetime as dt, time
 import pandas as pd
 from . import db, universe
 from .config import YEARS, EXTRA_INDICES
+import concurrent.futures
 
 def _extract(df, batch):
     res = {}
@@ -63,3 +64,30 @@ if __name__ == "__main__":
     ap.add_argument("--years", type=int, default=YEARS); ap.add_argument("--limit", type=int, default=None)
     a = ap.parse_args()
     run(a.years, limit=a.limit)
+def fetch_single_ticker(ticker, start_date="2020-10-10"):
+    """Downloads one stock and catches delisted/dead tickers."""
+    try:
+        df = yf.download(ticker, start=start_date, progress=False, ignore_tz=True)
+        if df.empty or len(df) < 50:  # Filters out empty or newly dead stocks
+            return ticker, None
+        return ticker, df
+    except Exception:
+        return ticker, None
+
+def run_ingestion(tickers, max_workers=10):
+    """Downloads historical data concurrently using multithreading."""
+    successful_downloads = {}
+    skipped_stocks = []
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(fetch_single_ticker, t): t for t in tickers}
+        for future in concurrent.futures.as_completed(futures):
+            ticker, df = future.result()
+            if df is not None:
+                successful_downloads[ticker] = df
+            else:
+                skipped_stocks.append(ticker)
+
+    print(f"Downloaded: {len(successful_downloads)} | Skipped (dead/empty): {len(skipped_stocks)}")
+    return successful_downloads    
+    
