@@ -82,4 +82,4 @@ def read_universe():
 
 def get_clean_tickers(ticker_list):
     """Filters out known invalid formats like Rights Entitlements."""
-    return [t for t in ticker_list if not t.endswith("-RE.NS")    
+    return [t for t in ticker_list if not t.endswith("-RE.NS") ]   
