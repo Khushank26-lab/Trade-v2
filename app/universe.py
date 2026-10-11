@@ -78,3 +78,8 @@ def build_universe(download=True):
 
 def read_universe():
     return pd.read_csv(UNIVERSE_CSV, dtype=str) if UNIVERSE_CSV.exists() else pd.DataFrame(columns=COLS)
+# app/universe.py
+
+def get_clean_tickers(ticker_list):
+    """Filters out known invalid formats like Rights Entitlements."""
+    return [t for t in ticker_list if not t.endswith("-RE.NS")    
